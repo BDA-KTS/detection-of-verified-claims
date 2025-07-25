@@ -3,6 +3,12 @@ import shutil
 import subprocess
 from pathlib import Path
 import argparse
+import nltk
+nltk.download("stopwords")
+nltk.download('punkt')
+import spacy
+from spacy.cli import download
+download("en_core_web_sm")
 
 
 def run(dataset_name, database_name="claimsKG", use_cache=False):
