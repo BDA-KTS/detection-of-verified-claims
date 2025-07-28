@@ -1,4 +1,4 @@
-# Lexical and Semantic Similarity Based Detection of Verified Claims (SimBa)
+# SimBa: Lexical and Semantic Similarity Based Detection of Verified Claims
 
 ## Description
 
@@ -20,7 +20,7 @@ The required input consists of an input query file [`data/sample/queries.tsv`](d
 
 Example of [`data/sample/queries.tsv`](data/sample/queries.tsv):
 ```
-1	Dog-owners face 78% higher risk of catching Covid-19
+1	Covid-19 vaccines increase the risk of dying from the new Covid-19 variants
 ```
 
 Optional input data: If desired, a different corpus than ClaimsKG can be supplied as database ([`data/claimsKG/corpus.tsv`](data/claimsKG/corpus.tsv)).
@@ -51,7 +51,7 @@ Contains the results in a tab-separated format with the following columns:
 
 | Query ID | Q0 | Claim ID | Rank | Similarity Score | Method Name |
 |----------|----|---------:|-----:|-----------------:|-------------|
-| 25603 | Q0 | 59543 | 1 | 31.600123964723423 | SimBa |
+| 1 | Q0 | http://data.gesis.org/claimskg/creative_work/1a0db2a7-fd8b-51ad-a89a-dd644da31ad8 | 1 | 45.55524233523532 | SimBa |
 
 ### 2. Client-Friendly Output File: [`data/sample/pred_client.tsv`](data/sample/pred_client.tsv)
 
@@ -59,11 +59,11 @@ Contains a more readable format with the following columns:
 
 | Query | VClaim | ClaimReviewURL | Rating | Similarity |
 |-------|--------|----------------|--------|------------|
-| Dog-owners face 78% higher risk of catching Covid-19 | Getting the first dose of Covid-19 vaccine increases risk of catching the novel coronavirus | https://factcheck.afp.com/misleading-facebook-posts-claim-covid-19-vaccine-increases-risk-catching-novel-coronavirus | b'Misleading' | 45.55524233523532 |
-| Dog-owners face 78% higher risk of catching Covid-19 | People vaccinated against Covid-19 pose a health risk to others by shedding spike proteins | https://factcheck.afp.com/covid-19-vaccine-does-not-make-people-dangerous-others | b'False' | 43.15199331134423 |
-| Dog-owners face 78% higher risk of catching Covid-19 | Vaccinated people are 885% more likely to die of Covid-19 than unvaccinated people | https://factcheck.afp.com/http%253A%252F%252Fdoc.afp.com%252F9JE74M-2 | b'False' | 42.53184410315937 |
-| Dog-owners face 78% higher risk of catching Covid-19 | In the United Kingdom, 70-plus percent of the people who die now from COVID are fully vaccinated. | https://www.politifact.com/factchecks/2021/oct/29/alex-berenson/covid-19-death-rate-england-much-higher-among-unva/ | FALSE | 42.506568861739346 |
-| Dog-owners face 78% higher risk of catching Covid-19 | Only the fully vaccinated should fear the new 'worst ever' Covid-19 variant; data shows they already account for 4 in every 5 Covid deaths | https://www.politifact.com/factchecks/2021/dec/07/blog-posting/article-misleads-dangers-omicron-variant-using-uk-/ | FALSE | 42.1289266007539 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Getting the first dose of Covid-19 vaccine increases risk of catching the novel coronavirus | https://factcheck.afp.com/misleading-facebook-posts-claim-covid-19-vaccine-increases-risk-catching-novel-coronavirus | b'Misleading' | 45.55524233523532 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | People vaccinated against Covid-19 pose a health risk to others by shedding spike proteins | https://factcheck.afp.com/covid-19-vaccine-does-not-make-people-dangerous-others | b'False' | 43.15199331134423 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Vaccinated people are 885% more likely to die of Covid-19 than unvaccinated people | https://factcheck.afp.com/http%253A%252F%252Fdoc.afp.com%252F9JE74M-2 | b'False' | 42.53184410315937 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | In the United Kingdom, 70-plus percent of the people who die now from COVID are fully vaccinated. | https://www.politifact.com/factchecks/2021/oct/29/alex-berenson/covid-19-death-rate-england-much-higher-among-unva/ | FALSE | 42.506568861739346 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Only the fully vaccinated should fear the new 'worst ever' Covid-19 variant; data shows they already account for 4 in every 5 Covid deaths | https://www.politifact.com/factchecks/2021/dec/07/blog-posting/article-misleads-dangers-omicron-variant-using-uk-/ | FALSE | 42.1289266007539 |
 
 ------------------------------------------------------------------------
 
