@@ -145,9 +145,21 @@ For increased efficiency, SimBa generates embeddings for the claims in each data
 ```bash
 python main.py <dataset name> -c
 ```
+### Using Cache for Efficiency and Quick Testing
 
+SimBa now comes also with **pre-computed embeddings** for the default fact-checking corpus (`ClaimsKG`). These embeddings are already stored in the cache folder (`data/cache/sample/*`), allowing you to run the system **without recomputing embeddings** from scratch.
 
-**⚠️ Important**: Please make sure that when you use the cache, you did not generate it for a different database that you had given the same name!
+You can quickly test the system in the interactive environment (e.g., Jupyter Notebook or terminal) by running:
+
+```bash
+python main.py sample -c
+```
+
+- The `-c` option enables the use of cached embeddings.
+- The default query file is located at `data/sample/queries.tsv`.
+
+ **Important**: If you plan to use a different database or modify the corpus, make sure to regenerate the embeddings accordingly, or remove the cache to force regeneration.
+
 
 ## Technical Details
 
