@@ -102,7 +102,7 @@ def run():
     elif args.corpus_sizes:
         caching_directory_targets = os.path.join(DATA_PATH, "cache/corpus_size_targets_"+args.data)
     else:
-        caching_directory_targets = caching_directory
+        caching_directory_targets = os.path.join(DATA_PATH, "cache/claimsKG")
     Path(caching_directory).mkdir(parents=True, exist_ok=True)
     Path(caching_directory_targets).mkdir(parents=True, exist_ok=True)
     queries = get_queries(args.queries)
