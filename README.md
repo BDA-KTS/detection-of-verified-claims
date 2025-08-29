@@ -33,13 +33,16 @@ The file should contain the following columns:
 
 | Column | Description |
 |--------|-------------|
-| Claim ID | A unique identifier for the claim |
-| Claim Text | The textual content of the claim |
-| Claim Review Title | The title of the fact-checking review |
-| Claim Review URL | A link to the fact-checking article |
-| Rating | The fact-checking assessment of the claim (e.g., true, false, half false, etc.) |
+| qid | A unique identifier for the claim |
+| text | The textual content of the claim |
+| title | The title of the fact-checking review |
+| url | A link to the fact-checking article |
+| rating | The fact-checking assessment of the claim (e.g., true, false, half false, etc.) |
 
-If available, a goldstandard can be supplied which lists the optimal results ([`data/sample/gold.tsv`](data/sample/gold.tsv)). This can be used to evaluate SimBa's performance using the evaluation scripts of the [CLEF CheckThat! Lab Task 2 Claim Retrieval challenge](https://checkthat.gitlab.io/clef2022/).
+If available, a goldstandard file can be supplied which lists the optimal results.  
+
+For example, SimBa can be evaluated directly on the CLEF CheckThat! data using the respective datasets and gold files.  
+You can also use the same evaluation scripts to evaluate SimBa’s performance on your *own data*, provided you supply a goldstandard file (gold.tsv) in the same folder as your input claims file (e.g., data/<dataset>/gold.tsv).
 
 ## Output Data
 
@@ -147,13 +150,17 @@ python main.py <dataset name> -c
 ```
 ### Using Cache for Efficiency and Quick Testing
 
-SimBa now comes also with **pre-computed embeddings** for the default fact-checking corpus (`ClaimsKG`). These embeddings are already stored in the cache folder (`data/cache/sample/*`), allowing you to run the system **without recomputing embeddings** from scratch.
+SimBa now comes with **pre-computed embeddings** for both queries and the default fact-checking corpus (`ClaimsKG`).  
+
+- **Query embeddings** are stored in: `data/cache/sample/*`  
+- **Target embeddings** (ClaimsKG corpus) are stored in: `data/cache/claimsKG/*`  
+
+These allow you to run the system **without recomputing embeddings** from scratch, saving significant time and resources.  
 
 You can quickly test the system in the interactive environment (e.g., Jupyter Notebook or terminal) by running:
 
 ```bash
 python main.py sample -c
-```
 
 - The `-c` option enables the use of cached embeddings.
 - The default query file is located at `data/sample/queries.tsv`.
