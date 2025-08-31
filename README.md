@@ -33,13 +33,16 @@ The file should contain the following columns:
 
 | Column | Description |
 |--------|-------------|
-| Claim ID | A unique identifier for the claim |
-| Claim Text | The textual content of the claim |
-| Claim Review Title | The title of the fact-checking review |
-| Claim Review URL | A link to the fact-checking article |
-| Rating | The fact-checking assessment of the claim (e.g., true, false, half false, etc.) |
+| qid | A unique identifier for the claim |
+| text | The textual content of the claim |
+| title | The title of the fact-checking review |
+| url | A link to the fact-checking article |
+| rating | The fact-checking assessment of the claim (e.g., true, false, half false, etc.) |
 
-If available, a goldstandard can be supplied which lists the optimal results ([`data/sample/gold.tsv`](data/sample/gold.tsv)). This can be used to evaluate SimBa's performance using the evaluation scripts of the [CLEF CheckThat! Lab Task 2 Claim Retrieval challenge](https://checkthat.gitlab.io/clef2022/).
+If available, a goldstandard file can be supplied which lists the optimal results.  
+
+For example, SimBa can be evaluated directly on the CLEF CheckThat! data using the respective datasets and gold files.  
+You can also use the same evaluation scripts to evaluate SimBa’s performance on your *own data*, provided you supply a goldstandard file (gold.tsv) in the same folder as your input claims file (e.g., data/<dataset>/gold.tsv).
 
 ## Output Data
 
@@ -51,7 +54,7 @@ Contains the results in a tab-separated format with the following columns:
 
 | Query ID | Q0 | Claim ID | Rank | Similarity Score | Method Name |
 |----------|----|---------:|-----:|-----------------:|-------------|
-| 1 | Q0 | http://data.gesis.org/claimskg/creative_work/1a0db2a7-fd8b-51ad-a89a-dd644da31ad8 | 1 | 45.55524233523532 | SimBa |
+| 1 | Q0 | http://data.gesis.org/claimskg/creative_work/4a27c731-c9a3-5ff6-81b3-cd46845d5ef9 | 1 | 51.24902489669692 | SimBa |
 
 ### 2. Client-Friendly Output File: [`data/sample/pred_client.tsv`](data/sample/pred_client.tsv)
 
@@ -59,11 +62,11 @@ Contains a more readable format with the following columns:
 
 | Query | VClaim | ClaimReviewURL | Rating | Similarity |
 |-------|--------|----------------|--------|------------|
-| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Getting the first dose of Covid-19 vaccine increases risk of catching the novel coronavirus | https://factcheck.afp.com/misleading-facebook-posts-claim-covid-19-vaccine-increases-risk-catching-novel-coronavirus | b'Misleading' | 45.55524233523532 |
-| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | People vaccinated against Covid-19 pose a health risk to others by shedding spike proteins | https://factcheck.afp.com/covid-19-vaccine-does-not-make-people-dangerous-others | b'False' | 43.15199331134423 |
-| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Vaccinated people are 885% more likely to die of Covid-19 than unvaccinated people | https://factcheck.afp.com/http%253A%252F%252Fdoc.afp.com%252F9JE74M-2 | b'False' | 42.53184410315937 |
-| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | In the United Kingdom, 70-plus percent of the people who die now from COVID are fully vaccinated. | https://www.politifact.com/factchecks/2021/oct/29/alex-berenson/covid-19-death-rate-england-much-higher-among-unva/ | FALSE | 42.506568861739346 |
-| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Only the fully vaccinated should fear the new 'worst ever' Covid-19 variant; data shows they already account for 4 in every 5 Covid deaths | https://www.politifact.com/factchecks/2021/dec/07/blog-posting/article-misleads-dangers-omicron-variant-using-uk-/ | FALSE | 42.1289266007539 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Vaccinated people are more susceptible to Covid-19 variants | https://factcheck.afp.com/http%253A%252F%252Fdoc.afp.com%252F9PB64D-1 | b'False' | 51.24902489669692 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Covid-19 vaccines will leave people exposed to deadly illness during the next cold and flu season and germ theory is a hoax | https://factcheck.afp.com/covid-19-shots-not-designed-increase-cold-flu-lethality | b'False' | 51.102840014017175 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Getting the first dose of Covid-19 vaccine increases risk of catching the novel coronavirus | https://factcheck.afp.com/misleading-facebook-posts-claim-covid-19-vaccine-increases-risk-catching-novel-coronavirus | b'Misleading' | 50.774385556493115 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | People vaccinated against Covid-19 pose a health risk to others by shedding spike proteins | https://factcheck.afp.com/covid-19-vaccine-does-not-make-people-dangerous-others | b'False' | 49.87148066707767 |
+| Covid-19 vaccines increase the risk of dying from the new Covid-19 variants | Mass vaccination will cause monster Covid-19 variants | https://factcheck.afp.com/mass-covid-19-vaccination-will-not-lead-out-control-variants | b'False' | 49.756611441979224 |
 
 ------------------------------------------------------------------------
 
@@ -137,6 +140,10 @@ python main.py <dataset name>
 - `<dataset name>`: A custom name for your input query dataset (e.g., "sample"). SimBa will automatically look for the input file at `data/<dataset name>/queries.tsv`.
 
 This will use the ClaimsKG database to find fact-checked claims that are similar to your input queries.
+The results will be written to the folder of your dataset, e.g.:  
+
+- `data/<dataset>/pred_client.tsv` : human-readable output (claims, URLs, ratings, similarity scores)  
+- `data/<dataset>/pred_qrels.tsv` : standard format for evaluation
 
 ### Using Cache for Efficiency
 
@@ -145,9 +152,25 @@ For increased efficiency, SimBa generates embeddings for the claims in each data
 ```bash
 python main.py <dataset name> -c
 ```
+### Using Cache for Efficiency and Quick Testing
 
+SimBa now comes with **pre-computed embeddings** for both queries and the default fact-checking corpus (`ClaimsKG`).  
 
-**⚠️ Important**: Please make sure that when you use the cache, you did not generate it for a different database that you had given the same name!
+- **Query embeddings** are stored in: `data/cache/sample/*`  
+- **Target embeddings** (ClaimsKG corpus) are stored in: `data/cache/claimsKG/*`  
+
+These allow you to run the system **without recomputing embeddings** from scratch, saving significant time and resources.  
+
+You can quickly test the system in the interactive environment (e.g., Jupyter Notebook or terminal) by running:
+
+```bash
+python main.py sample -c
+
+- The `-c` option enables the use of cached embeddings.
+- The default query file is located at `data/sample/queries.tsv`.
+
+ **Important**: If you plan to use a different database or modify the corpus, make sure to regenerate the embeddings accordingly, or remove the cache to force regeneration.
+
 
 ## Technical Details
 
