@@ -165,7 +165,7 @@ You can quickly test the system in the interactive environment (e.g., Jupyter No
 
 ```bash
 python main.py sample -c
-
+```
 - The `-c` option enables the use of cached embeddings.
 - The default query file is located at `data/sample/queries.tsv`.
 
