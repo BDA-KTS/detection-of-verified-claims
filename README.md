@@ -140,6 +140,10 @@ python main.py <dataset name>
 - `<dataset name>`: A custom name for your input query dataset (e.g., "sample"). SimBa will automatically look for the input file at `data/<dataset name>/queries.tsv`.
 
 This will use the ClaimsKG database to find fact-checked claims that are similar to your input queries.
+The results will be written to the folder of your dataset, e.g.:  
+
+- `data/<dataset>/pred_client.tsv` : human-readable output (claims, URLs, ratings, similarity scores)  
+- `data/<dataset>/pred_qrels.tsv` : standard format for evaluation
 
 ### Using Cache for Efficiency
 
