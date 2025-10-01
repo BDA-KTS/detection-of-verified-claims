@@ -16,20 +16,14 @@ ClaimsKG is a structured knowledge base (KB) which serves as a registry of claim
 
 ## Input Data
 
-The required input consists of an input query file [`data/sample/queries.tsv`](data/sample/queries.tsv): a text file in .tsv format (tab-separated) containing one query per line. One query consists of an ID and a claim. For each of the claims, SimBa will retrieve the most similar fact-checked claims in ClaimsKG.
+The required input consists of an input query file `data/<dataset>/queries.tsv`: a text file in .tsv format (tab-separated) containing one query per line. One query consists of an ID and a claim. For each of the claims, SimBa will retrieve the most similar fact-checked claims in ClaimsKG.
 
 Example of [`data/sample/queries.tsv`](data/sample/queries.tsv):
 ```
 1	Covid-19 vaccines increase the risk of dying from the new Covid-19 variants
 ```
 
-Optional input data: If desired, a different corpus than ClaimsKG can be supplied as database ([`data/claimsKG/corpus.tsv`](data/claimsKG/corpus.tsv)).
-
-This file should be in tab-separated format (`.tsv`) and must follow the structure below:
-
-Format of [`corpus.tsv`](data/claimsKG/corpus.tsv)
-
-The file should contain the following columns:
+Optional input data: If desired, a different corpus than ClaimsKG can be supplied as database (by exchanging [`data/claimsKG/corpus.tsv`](data/claimsKG/corpus.tsv)). The corpus file must be in tab-separated format (`.tsv`) and must contain the following columns:
 
 | Column | Description |
 |--------|-------------|
@@ -39,18 +33,15 @@ The file should contain the following columns:
 | url | A link to the fact-checking article |
 | rating | The fact-checking assessment of the claim (e.g., true, false, half false, etc.) |
 
-If available, a goldstandard file can be supplied which lists the optimal results.  
-
-For example, SimBa can be evaluated directly on the CLEF CheckThat! data using the respective datasets and gold files.  
-You can also use the same evaluation scripts to evaluate SimBa’s performance on your *own data*, provided you supply a goldstandard file (gold.tsv) in the same folder as your input claims file (e.g., data/<dataset>/gold.tsv).
+If available, a goldstandard file can be supplied which lists the optimal results. For example, SimBa can be evaluated directly on the CLEF CheckThat! data using the respective datasets and gold files.You can also use the same evaluation scripts to evaluate SimBa’s performance on your *own data*, provided you supply a goldstandard file (`gold.tsv`) in the same folder as your input claims file (e.g., `data/<dataset>/gold.tsv`).
 
 ## Output Data
 
-The outputs are exported to two files:
+The outputs are exported to two files, with one retrieved claim per row:
 
-### 1. Standard Output File: [`data/sample/sample.tsv`](data/sample/sample.tsv)
+### 1. CheckThat! Output File: [`data/sample/pred_qrels.tsv`](data/sample/pred_qrels.tsv)
 
-Contains the results in a tab-separated format with the following columns:
+Contains the results in the tab-separated format of the [CheckThat! competition (detecting previously fact-checked claims)](https://ceur-ws.org/Vol-3180/paper-29.pdf) with the following columns (no header):
 
 | Query ID | Q0 | Claim ID | Rank | Similarity Score | Method Name |
 |----------|----|---------:|-----:|-----------------:|-------------|
@@ -79,98 +70,31 @@ The method requires higher hardware specifications for optimal performance. Belo
 - **RAM**: 8 GB or more
 - **Storage**: 256 GB SSD (for faster read/write operations) + 256 GB HDD (for additional storage)
 
-**Note**: While the above specifications are recommended for optimal performance, SimBa can still run on more modest hardware. It has been successfully tested on a virtual machine with limited resources, though processing times will be significantly longer. The `-c` cache option becomes particularly helpful when working with limited hardware.
+**Note**: While the above specifications are recommended for optimal performance, SimBa can still run on more modest hardware (without GPU, 2 GB of RAM) when the existing version of ClaimsKG is used (see the `-c` option at [How to Use](#how-to-use)). It has been successfully tested on a virtual machine with limited resources, though processing times will be significantly longer.
 
 ## Environment Setup
 
 This version of SimBa has been tested with **Python 3.11.13** on Windows. Using other Python versions and/or operating systems might require other package versions.
 
-Follow the steps below to install SimBa on your system using the recommended setup.
-
-### 1. Install Python (Version 3.11.13)
-
-- **Download Python 3.11.13** from the official Python website:  
-   [https://www.python.org/downloads/release/python-31113/](https://www.python.org/downloads/release/python-31113/).
-
-- **Install Python**:
-    - **During installation**, make sure to **check the box** that says **"Add Python to PATH"**. This step is crucial, as it ensures that Python and pip (Python's package manager) are available in your terminal or command prompt.
-    - Follow the on-screen instructions to complete the installation.
-
-- **Verify the Installation**: 
-    After installation, open your terminal (or command prompt) and type the following command to check if Python was installed correctly:
-    ```bash
-    python --version
-    ```
-
-### 2. Clone the Repository and Navigate to the Main Project Directory
-
-To download SimBa, clone the repository from GitHub.
-
-Run the following commands in your terminal or command prompt:
-
-```bash
-git clone <repository-url>
-cd <repository name>
-```
-
-### 3. Install Required Dependencies and Data
-
-SimBa's required libraries and dependencies are listed in the requirements.txt file. Install them using the following command:
-
-```bash
-pip install -r requirements.txt
-```
-
+- If you have no Python installation, download it from the [official Python website](https://www.python.org/downloads/release/python-31113/). During installation, make sure to check the box that says "Add Python to PATH" to ensure that Python and pip (Python's package manager) are available in your terminal or command prompt. Verfiy your installation using `python --version`.
+- Install dependencies using
+  ```bash
+  pip install -r requirements.txt
+  ```
 
 ## How to Use
 
 Once everything is installed, you can run the SimBa project. To do so, use the following command in the terminal:
 
-```bash
-python main.py sample
-```
-
-Or more generally:
-
-```bash
-python main.py <dataset name>
-```
-
-**Parameters:**
-- `<dataset name>`: A custom name for your input query dataset (e.g., "sample"). SimBa will automatically look for the input file at `data/<dataset name>/queries.tsv`.
-
-This will use the ClaimsKG database to find fact-checked claims that are similar to your input queries.
-The results will be written to the folder of your dataset, e.g.:  
-
-- `data/<dataset>/pred_client.tsv` : human-readable output (claims, URLs, ratings, similarity scores)  
-- `data/<dataset>/pred_qrels.tsv` : standard format for evaluation
-
-### Using Cache for Efficiency
-
-For increased efficiency, SimBa generates embeddings for the claims in each database only once and stores them in a cache for re-use. To use this cache, if it already exists, supply the `-c` option:
-
-```bash
-python main.py <dataset name> -c
-```
-### Using Cache for Efficiency and Quick Testing
-
-SimBa now comes with **pre-computed embeddings** for both queries and the default fact-checking corpus (`ClaimsKG`).  
-
-- **Query embeddings** are stored in: `data/cache/sample/*`  
-- **Target embeddings** (ClaimsKG corpus) are stored in: `data/cache/claimsKG/*`  
-
-These allow you to run the system **without recomputing embeddings** from scratch, saving significant time and resources.  
-
-You can quickly test the system in the interactive environment (e.g., Jupyter Notebook or terminal) by running:
+To run the queries in [`data/sample/queries.tsv`](data/sample/queries.tsv) against unchanged ClaimsKG, run 
 
 ```bash
 python main.py sample -c
 ```
-- The `-c` option enables the use of cached embeddings.
-- The default query file is located at `data/sample/queries.tsv`.
 
- **Important**: If you plan to use a different database or modify the corpus, make sure to regenerate the embeddings accordingly, or remove the cache to force regeneration.
+To use your own corpus, exchange `sample` for the directory name of your dataset (see [Input Data](#input-data)). In this case, you can not use the [pre-computed embeddings](data/cache/claimsKG/). Generate new embeddings by not using the `-c` option the first time. Also the embeddings for the queries are stored and later re-used when `-c` is used. After you changed the queries, delete the stored embedding in `data/cache/<dataset>`.
 
+The results are written to the folder of your dataset, see [Output Data](#output-data):  
 
 ## Technical Details
 
@@ -198,3 +122,4 @@ SimBa was evaluated on the [CLEF CheckThat! Lab Task 2 Claim Retrieval challenge
 ## Contact Details
 
 For further assistance or inquiries, please contact: katarina.boland@hhu.de
+
